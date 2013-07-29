@@ -79,6 +79,22 @@ case $host_os in
                   porting it.])
     ;;
 esac
+case $host_os in
+  netbsd*)
+    case $host in
+      *powerpc-*|*sparc-*|*sparc64-*|*vax-*)
+        OS_FLAGS="$OS_FLAGS -DDEFAULT_TO_WSKBD"
+        ;;
+    esac
+    case "$(uname -m 2>&1)" in
+      evbarm|sgimips|shark)
+        OS_FLAGS="$OS_FLAGS -DDEFAULT_TO_WSKBD"
+        ;;
+    esac
+    ;;
+esac
+AC_SUBST([OS_FLAGS])
+
 AM_CONDITIONAL(LINUX, [test "x$IS_LINUX" = xyes])
 AM_CONDITIONAL(BSD, [test "x$IS_BSD" = xyes])
 AM_CONDITIONAL(SOLARIS, [test "x$IS_SOLARIS" = xyes])
