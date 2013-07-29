@@ -436,6 +436,12 @@ OpenKeyboard(InputInfoPtr pInfo)
            case WSKBD_TYPE_PC_AT:
                printWsType("AT", pInfo->name);
                break;
+           case 0:
+               /* If wsKbdType==0, no keyboard attached to the mux. Assume USB. */
+               xf86Msg(X_WARNING, "%s: No keyboard attached, assuming USB\n",
+                                  pInfo->name);
+               pKbd->wsKbdType = WSKBD_TYPE_USB;
+               /* FALLTHROUGH */
            case WSKBD_TYPE_USB:
                printWsType("USB", pInfo->name);
                break;
