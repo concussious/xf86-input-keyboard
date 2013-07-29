@@ -525,7 +525,7 @@ static CARD8 wsAdbMap[] = {
 	/* 68 */ KEY_NOTUSED,
 	/* 69 */ KEY_KP_Plus,
 	/* 70 */ KEY_NOTUSED,
-	/* 71 */ KEY_UNKNOWN,	/* Clear */
+	/* 71 */ KEY_NumLock,	/* Clear */
 	/* 72 */ KEY_NOTUSED, 
 	/* 73 */ KEY_NOTUSED,
 	/* 74 */ KEY_NOTUSED,
@@ -576,7 +576,12 @@ static CARD8 wsAdbMap[] = {
 	/* 119 */ KEY_End,
 	/* 120 */ KEY_F2,
 	/* 121 */ KEY_PgDown,
-	/* 122 */ KEY_F1
+	/* 122 */ KEY_F1,
+	/* 123 */ KEY_NOTUSED,
+	/* 124 */ KEY_NOTUSED,
+	/* 125 */ KEY_NOTUSED,
+	/* 126 */ KEY_NOTUSED,
+	/* 127 */ KEY_Power
 };
 #define WS_ADB_MAP_SIZE (sizeof(wsAdbMap)/sizeof(unsigned char))
 
