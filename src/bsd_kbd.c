@@ -39,6 +39,21 @@ typedef struct {
    struct termios kbdtty;
 } BsdKbdPrivRec, *BsdKbdPrivPtr;
 
+#ifdef WSCONS_SUPPORT
+static Bool
+WSSetVersion(int fd, const char *name)
+{
+#ifdef WSKBDIO_SETVERSION
+    int version = WSKBDIO_EVENT_VERSION;
+    if (ioctl(fd, WSKBDIO_SETVERSION, &version) == -1) {
+        xf86Msg(X_WARNING, "%s: cannot set version\n", name);
+        return FALSE;
+    }
+#endif
+    return TRUE;
+}
+#endif
+
 static
 int KbdInit(InputInfoPtr pInfo, int what)
 {
@@ -211,13 +226,8 @@ KbdOn(InputInfoPtr pInfo, int what)
             	 if ((pKbd->wsKbdDev[0] != 0) && (pInfo->fd == -1)) {
 			xf86Msg(X_INFO, "opening %s\n", pKbd->wsKbdDev);
 			pInfo->fd = open(pKbd->wsKbdDev, O_RDONLY | O_NONBLOCK | O_EXCL);
-#ifdef WSKBDIO_SETVERSION
-			int version = WSKBDIO_EVENT_VERSION;
-			if (ioctl(pInfo->fd, WSKBDIO_SETVERSION, &version) == -1) {
-				xf86Msg(X_WARNING, "%s: cannot set version\n", pInfo->name);
+			if (WSSetVersion(pInfo->fd, pInfo->name) == FALSE)
 				return FALSE;
-			}
-#endif
 		}
 		break;
 #endif
@@ -416,13 +426,8 @@ OpenKeyboard(InputInfoPtr pInfo)
 #ifdef WSCONS_SUPPORT
     if( prot == PROT_WSCONS) {
        pKbd->consType = WSCONS;
-#ifdef WSKBDIO_SETVERSION
-       int version = WSKBDIO_EVENT_VERSION;
-       if (ioctl(pInfo->fd, WSKBDIO_SETVERSION, &version) == -1) {
-           xf86Msg(X_WARNING, "%s: cannot set version\n", pInfo->name);
-           return FALSE;
-       }
-#endif
+       if (WSSetVersion(pInfo->fd, pInfo->name) == FALSE)
+	   return FALSE;
        /* Find out keyboard type */
        if (ioctl(pInfo->fd, WSKBDIO_GTYPE, &(pKbd->wsKbdType)) == -1) {
            xf86Msg(X_ERROR, "%s: cannot get keyboard type", pInfo->name);
