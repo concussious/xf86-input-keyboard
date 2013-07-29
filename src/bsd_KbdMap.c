@@ -314,12 +314,12 @@ static CARD8 wsUsbMap[] = {
 	/* 101 */ KEY_Menu,	/* Menu */
 	/* 102 */ KEY_Power,	/* sleep key on Sun USB */
 	/* 103 */ KEY_KP_Equal, /* Keypad = on Mac keyboards */
-	/* 104 */ KEY_NOTUSED,
-	/* 105 */ KEY_NOTUSED,
-	/* 106 */ KEY_NOTUSED,
-	/* 107 */ KEY_NOTUSED,
+	/* 104 */ KEY_F13,
+	/* 105 */ KEY_F14,
+	/* 106 */ KEY_F15,
+	/* 107 */ KEY_F16,
 	/* 108 */ KEY_NOTUSED,
-	/* 109 */ KEY_NOTUSED,
+	/* 109 */ KEY_Power,
 	/* 110 */ KEY_NOTUSED,
 	/* 111 */ KEY_NOTUSED,
 	/* 112 */ KEY_NOTUSED,
