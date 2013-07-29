@@ -173,8 +173,8 @@ KbdOn(InputInfoPtr pInfo, int what)
 			 xf86Msg(X_ERROR, "KbdOn: tcsetattr: %s\n",
 			     strerror(errno));
 		 }
-                 break; 
-#endif 
+                 break;
+#endif
         }
 #if defined (SYSCONS_SUPPORT) || defined (PCVT_SUPPORT) || defined (WSCONS_SUPPORT)
         switch (pKbd->consType) {
@@ -321,9 +321,9 @@ WSReadInput(InputInfoPtr pInfo)
 }
 
 static void
-printWsType(char *type, char *devname)
+printWsType(const char *type, const char *name)
 {
-    xf86Msg(X_PROBED, "%s: Keyboard type: %s\n", devname, type); 
+    xf86Msg(X_PROBED, "%s: Keyboard type: %s\n", name, type);
 }
 #endif
 
