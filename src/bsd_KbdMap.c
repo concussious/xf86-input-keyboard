@@ -443,7 +443,7 @@ static CARD8 wsUsbMap[] = {
 	/* 230 */ KEY_AltLang,	/* Right Alt, AKA AltGr */
 	/* 231 */ KEY_LMeta,	/* Right Meta XXX */
 };
-#define WS_USB_MAP_SIZE (sizeof(wsUsbMap)/sizeof(unsigned char))
+#define WS_USB_MAP_SIZE (sizeof(wsUsbMap)/sizeof(*wsUsbMap))
 
 static
 TransMapRec wsUsb = {
@@ -676,7 +676,7 @@ static CARD8 wsXtMap[] = {
 	/* 220 */ KEY_RMeta,
 	/* 221 */ KEY_Menu,
 };
-#define WS_XT_MAP_SIZE (sizeof(wsXtMap)/sizeof(unsigned char))
+#define WS_XT_MAP_SIZE (sizeof(wsXtMap)/sizeof(*wsXtMap))
 
 static
 TransMapRec wsXt = {
@@ -816,7 +816,7 @@ static CARD8 wsAdbMap[] = {
 	/* 126 */ KEY_NOTUSED,
 	/* 127 */ KEY_Power
 };
-#define WS_ADB_MAP_SIZE (sizeof(wsAdbMap)/sizeof(unsigned char))
+#define WS_ADB_MAP_SIZE (sizeof(wsAdbMap)/sizeof(*wsAdbMap))
 
 static
 TransMapRec wsAdb = {
@@ -1080,7 +1080,7 @@ static CARD8 wsLk201Map[] = {
 	/* 250 */ KEY_NOTUSED,
 	/* 251 */ KEY_NOTUSED,
 };
-#define WS_LK201_MAP_SIZE (sizeof(wsLk201Map)/sizeof(unsigned char))
+#define WS_LK201_MAP_SIZE (sizeof(wsLk201Map)/sizeof(*wsLk201Map))
 
 static
 TransMapRec wsLk201 = {
@@ -1219,7 +1219,7 @@ static CARD8 wsSunMap[] = {
 	/* 0x7e */ KEY_NOTUSED,
 	/* 0x7f */ KEY_NOTUSED
 };
-#define WS_SUN_MAP_SIZE (sizeof(wsSunMap)/sizeof(unsigned char))
+#define WS_SUN_MAP_SIZE (sizeof(wsSunMap)/sizeof(*wsSunMap))
 
 static
 TransMapRec wsSun = {
