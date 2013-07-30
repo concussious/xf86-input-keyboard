@@ -226,6 +226,10 @@ KbdOn(InputInfoPtr pInfo, int what)
             	 if ((pKbd->wsKbdDev[0] != 0) && (pInfo->fd == -1)) {
 			xf86Msg(X_INFO, "opening %s\n", pKbd->wsKbdDev);
 			pInfo->fd = open(pKbd->wsKbdDev, O_RDONLY | O_NONBLOCK | O_EXCL);
+			if (pInfo->fd == -1) {
+				xf86Msg(X_ERROR, "cannot open \"%s\"\n", pKbd->wsKbdDev);
+				return FALSE;
+			}
 			if (WSSetVersion(pInfo->fd, pInfo->name) == FALSE)
 				return FALSE;
 		}
