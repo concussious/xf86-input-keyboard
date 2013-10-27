@@ -69,7 +69,7 @@ int KbdInit(InputInfoPtr pInfo, int what)
 #if defined WSCONS_SUPPORT
             case WSCONS:
 #endif
- 	         tcgetattr(pInfo->fd, &(priv->kbdtty));
+		tcgetattr(pInfo->fd, &(priv->kbdtty));
 #endif
 	         break;
         }
@@ -223,7 +223,7 @@ KbdOn(InputInfoPtr pInfo, int what)
         switch (pKbd->consType) {
 #ifdef WSCONS_SUPPORT
             case WSCONS:
-            	 if ((pKbd->wsKbdDev[0] != 0) && (pInfo->fd == -1)) {
+		if ((pKbd->wsKbdDev[0] != 0) && (pInfo->fd == -1)) {
 			xf86Msg(X_INFO, "opening %s\n", pKbd->wsKbdDev);
 			pInfo->fd = open(pKbd->wsKbdDev, O_RDONLY | O_NONBLOCK | O_EXCL);
 			if (pInfo->fd == -1) {
@@ -275,15 +275,15 @@ KbdOff(InputInfoPtr pInfo, int what)
 #ifdef WSCONS_SUPPORT
             case WSCONS:
                  if ((pKbd->wsKbdDev[0] != 0) && (pInfo->fd != -1)) {
-                 	xf86Msg(X_INFO, "closing %s\n", pKbd->wsKbdDev);
-                 	/* need to close the fd while we're gone */
-                 	close(pInfo->fd);
-                 	pInfo->fd = -1;
+			xf86Msg(X_INFO, "closing %s\n", pKbd->wsKbdDev);
+			/* need to close the fd while we're gone */
+			close(pInfo->fd);
+			pInfo->fd = -1;
                  }
 	         break;
 #endif
         }
-    }   	
+    }
     return Success;
 }
 
@@ -296,7 +296,7 @@ SoundBell(InputInfoPtr pInfo, int loudness, int pitch, int duration)
 #endif
 
     if (loudness && pitch) {
-    	switch (pKbd->consType) {
+	switch (pKbd->consType) {
 #ifdef PCCONS_SUPPORT
 	    case PCCONS:
 	         { int data[2];
@@ -389,7 +389,7 @@ OpenKeyboard(InputInfoPtr pInfo)
     }
 
     switch (prot) {
-    	case PROT_STD:
+	case PROT_STD:
            pInfo->read_input = stdReadInput;
            break;
 #ifdef WSCONS_SUPPORT
