@@ -70,7 +70,7 @@ SetKbdLeds(InputInfoPtr pInfo, int leds)
 static int
 GetKbdLeds(InputInfoPtr pInfo)
 {
-    char real_leds;
+    char real_leds = 0;
     int leds = 0;
 
     ioctl(pInfo->fd, KDGETLED, &real_leds);
