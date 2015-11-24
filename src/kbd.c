@@ -53,11 +53,7 @@
 /* Used to know when the first DEVICE_ON after a DEVICE_INIT is called */
 #define INITFLAG	(1U << 31)
 
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 12
-static InputInfoPtr KbdPreInit(InputDriverPtr drv, IDevPtr dev, int flags);
-#else
 static int KbdPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags);
-#endif
 static int KbdProc(DeviceIntPtr device, int what);
 static void KbdCtrl(DeviceIntPtr device, KeybdCtrl *ctrl);
 static void KbdBell(int percent, DeviceIntPtr dev, pointer ctrl, int unused);
@@ -132,43 +128,8 @@ _X_EXPORT XF86ModuleData kbdModuleData = {
     NULL
 };
 
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 12
-static int
-NewKbdPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags);
-
-static InputInfoPtr
-KbdPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
-{
-    InputInfoPtr pInfo;
-
-    if (!(pInfo = xf86AllocateInput(drv, 0)))
-	return NULL;
-
-    pInfo->name = dev->identifier;
-    pInfo->flags = XI86_KEYBOARD_CAPABLE;
-    pInfo->conversion_proc = NULL;
-    pInfo->reverse_conversion_proc = NULL;
-    pInfo->private_flags = 0;
-    pInfo->always_core_feedback = NULL;
-    pInfo->conf_idev = dev;
-    pInfo->close_proc = NULL;
-
-    if (NewKbdPreInit(drv, pInfo, flags) == Success)
-    {
-        pInfo->flags |= XI86_CONFIGURED;
-        return pInfo;
-    }
-
-    xf86DeleteInput(pInfo, 0);
-    return NULL;
-}
-
-static int
-NewKbdPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
-#else
 static int
 KbdPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
-#endif
 {
     KbdDevPtr pKbd;
     char *s;
@@ -189,11 +150,7 @@ KbdPreInit(InputDriverPtr drv, InputInfoPtr pInfo, int flags)
     pInfo->dev = NULL;
 
     defaults = kbdDefaults;
-    xf86CollectInputOptions(pInfo, defaults
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 12
-            , NULL
-#endif
-            );
+    xf86CollectInputOptions(pInfo, defaults);
     xf86ProcessCommonOptions(pInfo, pInfo->options); 
 
     if (!(pKbd = calloc(sizeof(KbdDevRec), 1))) {
@@ -335,6 +292,7 @@ KbdProc(DeviceIntPtr device, int what)
 
   InputInfoPtr pInfo = device->public.devicePrivate;
   KbdDevPtr pKbd = (KbdDevPtr) pInfo->private;
+  XkbRMLVOSet rmlvo;
   KeySymsRec           keySyms;
   CARD8                modMap[MAP_LENGTH];
   int                  ret;
@@ -348,23 +306,19 @@ KbdProc(DeviceIntPtr device, int what)
          pKbd->KbdGetMapping(pInfo, &keySyms, modMap);
 
          device->public.on = FALSE;
-#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 5
+         rmlvo.rules = xkb_rules;
+         rmlvo.model = xkb_model;
+         rmlvo.layout = xkb_layout;
+         rmlvo.variant = xkb_variant;
+         rmlvo.options = xkb_options;
+
+         if (!InitKeyboardDeviceStruct(device, &rmlvo, KbdBell, KbdCtrl))
          {
-             XkbRMLVOSet rmlvo;
-             rmlvo.rules = xkb_rules;
-             rmlvo.model = xkb_model;
-             rmlvo.layout = xkb_layout;
-             rmlvo.variant = xkb_variant;
-             rmlvo.options = xkb_options;
+             xf86Msg(X_ERROR, "%s: Keyboard initialization failed. This "
+                     "could be a missing or incorrect setup of "
+                     "xkeyboard-config.\n", device->name);
 
-             if (!InitKeyboardDeviceStruct(device, &rmlvo, KbdBell, KbdCtrl))
-             {
-                 xf86Msg(X_ERROR, "%s: Keyboard initialization failed. This "
-                         "could be a missing or incorrect setup of "
-                         "xkeyboard-config.\n", device->name);
-
-                 return BadValue;
-             }
+             return BadValue;
          }
 # ifdef XI_PROP_DEVICE_NODE
          {
@@ -381,17 +335,6 @@ KbdProc(DeviceIntPtr device, int what)
              }
          }
 # endif /* XI_PROP_DEVICE_NODE */
-#else
-         {
-             XkbComponentNamesRec xkbnames;
-             memset(&xkbnames, 0, sizeof(xkbnames));
-             XkbSetRulesDflts(xkb_rules, xkb_model, xkb_layout,
-                              xkb_variant, xkb_options);
-             XkbInitKeyboardDeviceStruct(device, &xkbnames, &keySyms,
-                                         modMap, KbdBell,
-                                         (KbdCtrlProcPtr)KbdCtrl);
-         }
-#endif /* XINPUT ABI 5*/
          InitKBD(pInfo, TRUE);
          break;
   case DEVICE_ON:
