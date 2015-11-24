@@ -66,24 +66,6 @@ static void PostKbdEvent(InputInfoPtr pInfo, unsigned int key, Bool down);
 static void InitKBD(InputInfoPtr pInfo, Bool init);
 static void UpdateLeds(InputInfoPtr pInfo);
 
-_X_EXPORT InputDriverRec KBD = {
-	1,
-	"kbd",
-	NULL,
-	KbdPreInit,
-	NULL,
-	NULL
-};
-
-_X_EXPORT InputDriverRec KEYBOARD = {
-	1,
-	"keyboard",
-	NULL,
-	KbdPreInit,
-	NULL,
-	NULL
-};
-
 static const char *kbdDefaults[] = {
 #ifdef __NetBSD__
 #ifdef DEFAULT_TO_WSKBD
@@ -105,6 +87,50 @@ static char *xkb_model;
 static char *xkb_layout;
 static char *xkb_variant;
 static char *xkb_options;
+
+_X_EXPORT InputDriverRec KBD = {
+    1,
+    "kbd",
+    NULL,
+    KbdPreInit,
+    NULL,
+    NULL
+};
+
+_X_EXPORT InputDriverRec KEYBOARD = {
+    1,
+    "keyboard",
+    NULL,
+    KbdPreInit,
+    NULL,
+    NULL
+};
+
+static XF86ModuleVersionInfo xf86KbdVersionRec = {
+    "kbd",
+    MODULEVENDORSTRING,
+    MODINFOSTRING1,
+    MODINFOSTRING2,
+    XORG_VERSION_CURRENT,
+    PACKAGE_VERSION_MAJOR, PACKAGE_VERSION_MINOR, PACKAGE_VERSION_PATCHLEVEL,
+    ABI_CLASS_XINPUT,
+    ABI_XINPUT_VERSION,
+    MOD_CLASS_XINPUT,
+    {0, 0, 0, 0}
+};
+
+static pointer
+xf86KbdPlug(pointer module, pointer options, int *errmaj, int *errmin)
+{
+    xf86AddInputDriver(&KBD, module, 0);
+    return module;
+}
+
+_X_EXPORT XF86ModuleData kbdModuleData = {
+    &xf86KbdVersionRec,
+    xf86KbdPlug,
+    NULL
+};
 
 #if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 12
 static int
@@ -451,35 +477,3 @@ PostKbdEvent(InputInfoPtr pInfo, unsigned int scanCode, Bool down)
 
   xf86PostKeyboardEvent(device, scanCode + MIN_KEYCODE, down);
 }
-
-static pointer
-xf86KbdPlug(pointer	module,
-	    pointer	options,
-	    int		*errmaj,
-	    int		*errmin)
-{
-    xf86AddInputDriver(&KBD, module, 0);
-
-    return module;
-}
-
-static XF86ModuleVersionInfo xf86KbdVersionRec =
-{
-    "kbd",
-    MODULEVENDORSTRING,
-    MODINFOSTRING1,
-    MODINFOSTRING2,
-    XORG_VERSION_CURRENT,
-    PACKAGE_VERSION_MAJOR, PACKAGE_VERSION_MINOR, PACKAGE_VERSION_PATCHLEVEL,
-    ABI_CLASS_XINPUT,
-    ABI_XINPUT_VERSION,
-    MOD_CLASS_XINPUT,
-    {0, 0, 0, 0}		/* signature, to be patched into the file by */
-				/* a tool */
-};
-
-_X_EXPORT XF86ModuleData kbdModuleData = {
-    &xf86KbdVersionRec,
-    xf86KbdPlug,
-    NULL
-};
