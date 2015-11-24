@@ -452,11 +452,6 @@ PostKbdEvent(InputInfoPtr pInfo, unsigned int scanCode, Bool down)
   xf86PostKeyboardEvent(device, scanCode + MIN_KEYCODE, down);
 }
 
-static void
-xf86KbdUnplug(pointer	p)
-{
-}
-
 static pointer
 xf86KbdPlug(pointer	module,
 	    pointer	options,
@@ -486,5 +481,5 @@ static XF86ModuleVersionInfo xf86KbdVersionRec =
 _X_EXPORT XF86ModuleData kbdModuleData = {
     &xf86KbdVersionRec,
     xf86KbdPlug,
-    xf86KbdUnplug
+    NULL
 };
