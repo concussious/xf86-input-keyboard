@@ -58,7 +58,7 @@ AC_SUBST(inputdir)
 # The keyboard driver code is O/S specific
 case $host_os in
   linux*)
-    IS_LINUX="yes"
+    AC_MSG_ERROR([This is not the keyboard driver you are looking for. Use evdev or libinput.])
     ;;
 
   freebsd* | kfreebsd-gnu* | netbsd* | openbsd* | dragonfly*)
@@ -95,7 +95,6 @@ case $host_os in
 esac
 AC_SUBST([OS_FLAGS])
 
-AM_CONDITIONAL(LINUX, [test "x$IS_LINUX" = xyes])
 AM_CONDITIONAL(BSD, [test "x$IS_BSD" = xyes])
 AM_CONDITIONAL(SOLARIS, [test "x$IS_SOLARIS" = xyes])
 AM_CONDITIONAL(HURD, [test "x$IS_HURD" = xyes])
