@@ -59,6 +59,7 @@
 #include <sys/stropts.h>
 #include <sys/vuid_event.h>
 #include <sys/kbd.h>
+#include <sys/kbio.h>
 #include <sys/note.h>	/* needed before including older versions of hid.h */
 #include <sys/usb/clients/hid/hid.h>
 
