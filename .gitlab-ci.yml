@@ -101,11 +101,17 @@ build:
     # We don't want any failed commands to exit our script until VM
     # cleanup has been completed.
     - set +e
-    # First we need to build and install the Xorg server to get the SDK headers
+    # First we need to install the latest xorgproto needed to build Xserver
+    - |
+      /app/vmctl exec "git clone --depth=1 https://gitlab.freedesktop.org/xorg/proto/xorgproto.git"
+      /app/vmctl exec "mkdir xorgproto/_builddir"
+      /app/vmctl exec "cd xorgproto/_builddir && meson setup"
+      /app/vmctl exec "cd xorgproto/_builddir && ninja install"
+    # Then we need to build and install the Xorg server to get the SDK headers
     - |
       /app/vmctl exec "git clone --depth=1 https://gitlab.freedesktop.org/xorg/xserver.git"
       /app/vmctl exec "mkdir xserver/_builddir"
-      /app/vmctl exec "cd xserver/_builddir && meson setup $XSERVER_MESON_FLAGS"
+      /app/vmctl exec "cd xserver/_builddir && env PKG_CONFIG_PATH=/usr/local/lib/pkgconfig meson setup $XSERVER_MESON_FLAGS"
       /app/vmctl exec "cd xserver/_builddir && ninja"
       /app/vmctl exec "cd xserver/_builddir && ninja install"
     # Now build this driver
