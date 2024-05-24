@@ -30,11 +30,11 @@ variables:
   # The tag should be updated each time the list of packages is updated.
   # Changing a tag forces the associated image to be rebuilt.
   # Note: the tag has no meaning, we use a date format purely for readability
-  FDO_DISTRIBUTION_TAG:  '2023-12-02.0'
+  FDO_DISTRIBUTION_TAG:  '2024-05-24.0'
   FDO_DISTRIBUTION_VERSION: '14.0'
   # Packages needed to build enough of xorg-server to build this driver
   EXTRA_PACKAGES: 'meson ninja pixman xtrans libXau libXdmcp libXfont2 libxkbfile libxcvt libpciaccess font-util'
-  FDO_DISTRIBUTION_PACKAGES: 'git gcc pkgconf autoconf automake libtool xorg-macros xorgproto $EXTRA_PACKAGES'
+  FDO_DISTRIBUTION_PACKAGES: 'git gcc pkgconf autoconf automake libtool xorg-macros xorgproto libepoll-shim $EXTRA_PACKAGES'
 
 #
 # Verify that commit messages are as expected
