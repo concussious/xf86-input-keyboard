@@ -91,6 +91,7 @@ build:
     - .fdo.distribution-image@freebsd
   variables:
     XSERVER_MESON_FLAGS: -Dglx=false -Dglamor=false -Dudev=false -Dudev_kms=false
+    PKGCONF_PATH:        /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/local/libdata/pkgconfig
   script:
     # start the VM. This also sets up ssh/scp to connect to "vm"
     # correctly.
@@ -111,16 +112,16 @@ build:
     - |
       /app/vmctl exec "git clone --depth=1 https://gitlab.freedesktop.org/xorg/xserver.git"
       /app/vmctl exec "mkdir xserver/_builddir"
-      /app/vmctl exec "cd xserver/_builddir && env PKG_CONFIG_PATH=/usr/local/lib/pkgconfig meson setup $XSERVER_MESON_FLAGS"
+      /app/vmctl exec "cd xserver/_builddir && env PKG_CONFIG_PATH=$PKGCONF_PATH meson setup $XSERVER_MESON_FLAGS"
       /app/vmctl exec "cd xserver/_builddir && ninja"
       /app/vmctl exec "cd xserver/_builddir && ninja install"
     # Now build this driver
     - |
       /app/vmctl exec "mkdir $CI_PROJECT_NAME/_builddir"
-      /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && ../autogen.sh --disable-silent-rules PKG_CONFIG_PATH=/usr/local/lib/pkgconfig"
+      /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && ../autogen.sh --disable-silent-rules PKG_CONFIG_PATH=$PKGCONF_PATH"
       /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && make"
       /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && make check"
-      /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && env PKG_CONFIG_PATH=/usr/local/lib/pkgconfig make distcheck" && touch .success
+      /app/vmctl exec "cd $CI_PROJECT_NAME/_builddir && env PKG_CONFIG_PATH=$PKGCONF_PATH make distcheck" && touch .success
     # copy any test results from the VM to our container so we can
     # save them as artifacts
     # - scp -r vm:$CI_PROJECT_NAME/test-results.xml .
